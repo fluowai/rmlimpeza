@@ -16,8 +16,16 @@ import ChatWidget from '../components/ChatWidget';
 import { useConfig } from '../context/ConfigContext';
 
 export default function HomePage() {
-  const { config } = useConfig();
+  const { config, isLoading } = useConfig();
   const { heroData, benefits, services, testimonials, salesBlock, WHATSAPP_LINK, WHATSAPP_NUMBER } = config;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Logo className="h-32 animate-pulse opacity-20" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] font-sans text-slate-900 selection:bg-blue-600 selection:text-white">

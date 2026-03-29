@@ -22,7 +22,7 @@ interface AdminPanelProps {
 }
 
 export default function AdminPanel({ isLogin }: AdminPanelProps) {
-  const { config, updateConfig, resetConfig, login, logout, isLoggedIn, updateLeadStatus, deleteLead } = useConfig();
+  const { config, updateConfig, resetConfig, login, logout, isLoggedIn, updateLeadStatus, deleteLead, isLoading } = useConfig();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState<'geral' | 'hero' | 'beneficios' | 'servicos' | 'vendas' | 'depoimentos' | 'leads'>('geral');
@@ -38,6 +38,17 @@ export default function AdminPanel({ isLogin }: AdminPanelProps) {
       setTimeout(() => setLoginError(false), 3000);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-500 font-bold text-sm uppercase tracking-widest">Sincronizando Banco de Dados...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLogin) {
     return (
