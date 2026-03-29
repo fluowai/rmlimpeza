@@ -223,7 +223,7 @@ export default function AdminPanel({ isLogin }: AdminPanelProps) {
                     }} className="text-red-500 p-2 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={20} /></button>
                  </div>
                ))}
-               <button onClick={() => updateConfig({ services: [...config.services, { label: 'Novo Serviço', icon: undefined as any }] })} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold flex items-center justify-center gap-2 hover:border-blue-300 hover:text-blue-500 transition-all">
+               <button onClick={() => updateConfig({ services: [...config.services, { label: 'Novo Serviço', icon: 'Sparkles' }] })} className="w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold flex items-center justify-center gap-2 hover:border-blue-300 hover:text-blue-500 transition-all">
                  <Plus size={20} /> Adicionar Serviço
                </button>
              </div>

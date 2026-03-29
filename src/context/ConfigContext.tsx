@@ -74,30 +74,44 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // --- Função: Sincronizar com Banco de Dados (Supabase) ---
   useEffect(() => {
     const fetchData = async () => {
-      if (!isSupabaseConfigured()) {
-        console.warn('Supabase não configurado. Usando dados locais.');
-        setIsLoading(false);
-        return;
-      }
-
+      // 1. Início seguro
       try {
-        // 1. Carregar Configuração do Site
+        if (!isSupabaseConfigured()) {
+          console.warn('Supabase não configurado. Usando dados locais de fallback.');
+          setIsLoading(false);
+          return;
+        }
+
+        // 2. Carregar Configuração do Site (Sincronização)
         const { data: configData, error: configError } = await supabase
           .from('site_config')
           .select('data')
           .maybeSingle();
 
-        if (configData && !configError) {
-          setConfig(prev => ({ ...prev, ...configData.data }));
+        if (configError) throw configError;
+
+        if (configData && configData.data) {
+          setConfig(prev => {
+            const newData = configData.data;
+            // Merging heroData carefully to avoid losing required sub-fields
+            return {
+              ...prev,
+              ...newData,
+              heroData: newData.heroData ? { ...prev.heroData, ...newData.heroData } : prev.heroData,
+              salesBlock: newData.salesBlock ? { ...prev.salesBlock, ...newData.salesBlock } : prev.salesBlock,
+            };
+          });
         }
 
-        // 2. Carregar Leads
+        // 3. Carregar Leads
         const { data: leadsData, error: leadsError } = await supabase
           .from('leads')
           .select('*')
           .order('created_at', { ascending: false });
 
-        if (leadsData && !leadsError) {
+        if (leadsError) throw leadsError;
+
+        if (leadsData) {
           const mappedLeads = leadsData.map(l => ({
              ...l,
              createdAt: l.created_at
@@ -105,8 +119,9 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           setConfig(prev => ({ ...prev, leads: mappedLeads }));
         }
       } catch (err) {
-        console.error('Falha ao sincronizar com Supabase:', err);
+        console.error('Falha crítica na sincronização Supabase:', err);
       } finally {
+        // GARANTIR que o loading termine para não dar tela branca
         setIsLoading(false);
       }
     };

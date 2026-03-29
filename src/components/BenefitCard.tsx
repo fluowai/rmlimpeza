@@ -1,14 +1,15 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
+import { getIcon } from '../lib/icons';
 
 export interface BenefitCardProps {
-  icon: LucideIcon;
+  icon: string;
   title: string;
   description: string;
 }
 
-export const BenefitCard: React.FC<BenefitCardProps> = ({ icon: Icon, title, description }) => {
+export const BenefitCard: React.FC<BenefitCardProps> = ({ icon, title, description }) => {
+  const Icon = getIcon(icon);
   return (
     <motion.div 
       whileHover={{ y: -5 }}

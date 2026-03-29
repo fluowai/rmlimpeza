@@ -33,34 +33,34 @@ export const heroData = {
 
 export const benefits = [
   {
-    icon: Clock,
+    icon: 'Clock',
     title: "Atendimento rápido",
     description: "Você chama e já recebe resposta. Sem enrolação."
   },
   {
-    icon: Sparkles,
+    icon: 'Sparkles',
     title: "Limpeza bem feita",
     description: "Serviço caprichado, com resultado que dá pra ver."
   },
   {
-    icon: ShieldCheck,
+    icon: 'ShieldCheck',
     title: "Equipe de confiança",
     description: "Profissionais pontuais e cuidadosos."
   },
   {
-    icon: BadgeDollarSign,
+    icon: 'BadgeDollarSign',
     title: "Serviço garantido",
     description: "Compromisso com a qualidade do serviço do início ao fim."
   }
 ];
 
 export const services = [
-  { icon: Home, label: "Casas e sobrados" },
-  { icon: Building, label: "Apartamentos" },
-  { icon: Building2, label: "Escritórios" },
-  { icon: Sparkles, label: "Pós-obra" },
-  { icon: Building, label: "Condomínios" },
-  { icon: School, label: "Escolas" }
+  { icon: 'Home', label: "Casas e sobrados" },
+  { icon: 'Building', label: "Apartamentos" },
+  { icon: 'Building2', label: "Escritórios" },
+  { icon: 'Sparkles', label: "Pós-obra" },
+  { icon: 'Building', label: "Condomínios" },
+  { icon: 'School', label: "Escolas" }
 ];
 
 export const testimonials = [

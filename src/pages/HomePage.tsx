@@ -22,7 +22,7 @@ export default function HomePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <Logo className="h-32 animate-pulse opacity-20" />
+        <img src="/logo-rm-original.png" alt="Carregando..." className="h-32 animate-pulse opacity-20" />
       </div>
     );
   }

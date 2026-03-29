@@ -1,13 +1,14 @@
 import React from 'react';
-import { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
+import { getIcon } from '../lib/icons';
 
 export interface ServiceItemProps {
-  icon: LucideIcon;
+  icon: string;
   label: string;
 }
 
-export const ServiceItem: React.FC<ServiceItemProps> = ({ icon: Icon, label }) => {
+export const ServiceItem: React.FC<ServiceItemProps> = ({ icon, label }) => {
+  const Icon = getIcon(icon);
   return (
     <motion.div 
       whileHover={{ scale: 1.02 }}
