@@ -135,7 +135,7 @@ export default function HomePage({ city }: HomePageProps) {
                 </p>
 
                 <div className="space-y-4 mb-10 sm:mb-12 text-left bg-white/50 backdrop-blur-sm p-6 sm:p-8 rounded-[32px] border border-slate-100 inline-block lg:block shadow-sm">
-                  {heroData.bullets.map((bullet, i) => (
+                  {heroData.bullets?.map((bullet, i) => (
                     <div key={i} className="flex items-start gap-4 text-slate-700 font-semibold text-sm sm:text-lg">
                       <div className="mt-1 w-6 h-6 bg-emerald-50 rounded-full flex items-center justify-center flex-shrink-0">
                          <Check size={14} className="text-emerald-600" strokeWidth={4} />
@@ -221,7 +221,7 @@ export default function HomePage({ city }: HomePageProps) {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-              {trustProcess.map((item, i) => {
+              {trustProcess?.map((item, i) => {
                 const Icon = item.icon as any;
                 return (
                   <motion.div 
@@ -245,7 +245,7 @@ export default function HomePage({ city }: HomePageProps) {
         <section className="py-12 sm:py-20 bg-[#FDFDFD]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-              {benefits.map((benefit, i) => (
+              {benefits?.map((benefit, i) => (
                 <BenefitCard key={i} {...benefit} />
               ))}
             </div>
@@ -276,7 +276,7 @@ export default function HomePage({ city }: HomePageProps) {
                   <div className="h-px flex-1 bg-slate-800" />
                 </div>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
-                  {services.filter(s => s.category === cat).map((service, i) => (
+                  {services?.filter(s => s.category === cat).map((service, i) => (
                     <ServiceItem key={i} {...service} />
                   ))}
                 </div>
@@ -297,7 +297,7 @@ export default function HomePage({ city }: HomePageProps) {
             </div>
             
             <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
-              {testimonials.map((testimonial, i) => (
+              {testimonials?.map((testimonial, i) => (
                 <TestimonialCard key={i} {...testimonial} />
               ))}
             </div>
@@ -339,7 +339,7 @@ export default function HomePage({ city }: HomePageProps) {
             </div>
 
             <div className="space-y-4">
-              {faq.map((item, i) => (
+              {faq?.map((item, i) => (
                 <div key={i} className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                   <button 
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}

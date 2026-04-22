@@ -97,12 +97,23 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         if (configData && configData.data) {
           setConfig(prev => {
             const newData = configData.data;
-            // Merging heroData carefully to avoid losing required sub-fields
             return {
               ...prev,
               ...newData,
-              heroData: newData.heroData ? { ...prev.heroData, ...newData.heroData } : prev.heroData,
-              salesBlock: newData.salesBlock ? { ...prev.salesBlock, ...newData.salesBlock } : prev.salesBlock,
+              heroData: {
+                ...(prev.heroData || {}),
+                ...(newData.heroData || {}),
+                bullets: newData.heroData?.bullets || prev.heroData?.bullets || []
+              },
+              services: newData.services || prev.services || [],
+              benefits: newData.benefits || prev.benefits || [],
+              testimonials: newData.testimonials || prev.testimonials || [],
+              faq: newData.faq || prev.faq || [],
+              trustProcess: newData.trustProcess || prev.trustProcess || [],
+              salesBlock: {
+                ...(prev.salesBlock || {}),
+                ...(newData.salesBlock || {})
+              }
             };
           });
         }
