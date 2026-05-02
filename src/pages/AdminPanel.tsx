@@ -348,14 +348,28 @@ function KanbanColumn({ title, color, leads, onStatusChange, onDelete }: {
               </div>
               <p className="text-blue-600 font-bold text-sm mt-1">{lead.phone}</p>
             </div>
-            
+
+            {/* Service Type and City */}
+            <div className="flex flex-wrap gap-2">
+              {lead.serviceType && (
+                <span className="px-2 py-1 bg-blue-50 text-blue-700 rounded-lg text-[10px] font-bold uppercase tracking-widest">
+                  {lead.serviceType}
+                </span>
+              )}
+              {lead.city && (
+                <span className="px-2 py-1 bg-emerald-50 text-emerald-700 rounded-lg text-[10px] font-bold uppercase tracking-widest">
+                  {lead.city}
+                </span>
+              )}
+            </div>
+
             <p className="text-slate-500 text-xs leading-relaxed italic">"{lead.message}"</p>
-            
+
             <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
               <span className="text-[10px] text-slate-400 font-bold uppercase">{new Date(lead.createdAt).toLocaleDateString()}</span>
               <div className="flex gap-1">
                 {lead.status !== 'novo' && (
-                  <button 
+                  <button
                     onClick={() => {
                       const prevStatus: any = lead.status === 'em_contato' ? 'novo' : lead.status === 'agendado' ? 'em_contato' : 'agendado';
                       onStatusChange(lead.id, prevStatus);
@@ -366,7 +380,7 @@ function KanbanColumn({ title, color, leads, onStatusChange, onDelete }: {
                   </button>
                 )}
                 {lead.status !== 'finalizado' && (
-                  <button 
+                  <button
                     onClick={() => {
                       const nextStatus: any = lead.status === 'novo' ? 'em_contato' : lead.status === 'em_contato' ? 'agendado' : 'finalizado';
                       onStatusChange(lead.id, nextStatus);

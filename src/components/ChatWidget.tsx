@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { MessageCircle, X, Send, User, Phone, CheckCircle2 } from 'lucide-react';
+import { MessageCircle, X, Send, User, Phone, CheckCircle2, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useConfig } from '../context/ConfigContext';
+import { ServiceType } from '../context/ConfigContext';
+
+const serviceTypes: ServiceType[] = ['Limpeza', 'Copeira', 'Portaria', 'Garçom', 'Outro'];
+const cities = [
+  'Florianópolis',
+  'São José',
+  'Palhoça',
+  'Biguaçu'
+];
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,14 +19,22 @@ export default function ChatWidget() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    serviceType: '' as ServiceType | '',
+    city: '',
     message: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addLead(formData);
+    addLead({
+      name: formData.name,
+      phone: formData.phone,
+      serviceType: formData.serviceType as ServiceType || 'Outro',
+      city: formData.city || undefined,
+      message: formData.message
+    });
 
-    const text = `Olá! Meu nome é ${formData.name}. ${formData.message}`;
+    const text = `Olá! Meu nome é ${formData.name}. Gostaria de orçamento para ${formData.serviceType || 'serviços'} em ${formData.city || 'sua região'}. ${formData.message}`;
     const encodedText = encodeURIComponent(text);
     const whatsappUrl = `https://wa.me/${config.WHATSAPP_NUMBER}?text=${encodedText}`;
 
@@ -26,7 +43,7 @@ export default function ChatWidget() {
       window.open(whatsappUrl, '_blank');
       setIsOpen(false);
       setStep('form');
-      setFormData({ name: '', phone: '', message: '' });
+      setFormData({ name: '', phone: '', serviceType: '', city: '', message: '' });
     }, 2000);
   };
 
@@ -60,9 +77,9 @@ export default function ChatWidget() {
                 <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                    <input 
+                    <input
                       required
-                      type="text" 
+                      type="text"
                       placeholder="Seu nome"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -71,30 +88,59 @@ export default function ChatWidget() {
                   </div>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                    <input 
+                    <input
                       required
-                      type="tel" 
+                      type="tel"
                       placeholder="Seu WhatsApp (com DDD)"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-100 rounded-xl sm:rounded-2xl pl-11 pr-4 py-3 sm:py-4 text-sm focus:outline-none focus:border-blue-500 transition-all font-medium"
                     />
                   </div>
-                  <div>
-                    <textarea 
+                  {/* Tipo de Serviço */}
+                  <div className="relative">
+                    <select
                       required
-                      placeholder="Qual o serviço desejado?"
+                      value={formData.serviceType}
+                      onChange={(e) => setFormData({ ...formData, serviceType: e.target.value as ServiceType })}
+                      className="w-full bg-slate-50 border border-slate-100 rounded-xl sm:rounded-2xl pl-4 pr-11 py-3 sm:py-4 text-sm focus:outline-none focus:border-blue-500 transition-all font-medium appearance-none cursor-pointer"
+                    >
+                      <option value="">Selecione o serviço</option>
+                      {serviceTypes.map(type => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                  </div>
+                  {/* Cidade */}
+                  <div className="relative">
+                    <select
+                      value={formData.city}
+                      onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-100 rounded-xl sm:rounded-2xl pl-4 pr-11 py-3 sm:py-4 text-sm focus:outline-none focus:border-blue-500 transition-all font-medium appearance-none cursor-pointer"
+                    >
+                      <option value="">Selecione a cidade (opcional)</option>
+                      {cities.map(city => (
+                        <option key={city} value={city}>{city}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={16} />
+                  </div>
+                  <div>
+                    <textarea
+                      required
+                      placeholder="Descreva o serviço desejado..."
                       rows={3}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       className="w-full bg-slate-50 border border-slate-100 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4 text-sm focus:outline-none focus:border-blue-500 transition-all font-medium resize-none"
                     />
                   </div>
-                  <button 
+                  <button
                     type="submit"
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 sm:py-4 rounded-xl sm:rounded-2xl shadow-xl shadow-blue-600/10 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                   >
-                    Iniciar Conversa <Send size={16} />
+                    Solicitar Orçamento <Send size={16} />
                   </button>
                 </form>
               ) : (

@@ -4,12 +4,15 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 // Tipagem para a configuração do site (Simplificada)
 export type LeadStatus = 'novo' | 'em_contato' | 'agendado' | 'finalizado';
+export type ServiceType = 'Limpeza' | 'Copeira' | 'Portaria' | 'Garçom' | 'Outro';
 
 export interface Lead {
   id: string;
   name: string;
   phone: string;
   message: string;
+  serviceType: ServiceType;
+  city?: string;
   status: LeadStatus;
   createdAt: string;
 }
@@ -165,11 +168,11 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const addLead = async (lead: Omit<Lead, 'id' | 'status' | 'createdAt'>) => {
     const newLead: Lead = {
       ...lead,
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       status: 'novo',
       createdAt: new Date().toISOString(),
     };
-    
+
     // UI Update (Otimista)
     setConfig(prev => ({ ...prev, leads: [newLead, ...prev.leads] }));
 
@@ -182,6 +185,8 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         name: newLead.name,
         phone: newLead.phone,
         message: newLead.message,
+        service_type: newLead.serviceType,
+        city: newLead.city || null,
         status: newLead.status,
         created_at: newLead.createdAt
       });

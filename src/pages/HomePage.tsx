@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { 
-  Sparkles, 
+import React, { useState, useEffect } from 'react';
+import {
+  Sparkles,
   MessageCircle,
   Phone,
   Check,
   ChevronDown,
-  ChevronRight,
   ShieldCheck,
-  Award
+  Award,
+  MapPin,
+  ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -18,46 +19,58 @@ import { TestimonialCard } from '../components/TestimonialCard';
 import { Logo } from '../components/Logo';
 import ChatWidget from '../components/ChatWidget';
 import { useConfig } from '../context/ConfigContext';
-import { getIcon } from '../lib/icons';
+import { cities, serviceCategories } from '../data/constants';
 
-interface HomePageProps {
-  city?: string;
-}
-
-export default function HomePage({ city }: HomePageProps) {
+export default function HomePage({ city, serviceType }: HomePageProps) {
   const { config, isLoading } = useConfig();
-  const { 
-    heroData, 
-    benefits, 
-    services, 
-    testimonials, 
-    salesBlock, 
-    trustProcess, 
+  const {
+    heroData,
+    benefits,
+    services,
+    testimonials,
+    salesBlock,
+    trustProcess,
     faq,
-    WHATSAPP_LINK, 
-    WHATSAPP_NUMBER 
+    WHATSAPP_LINK,
+    WHATSAPP_NUMBER
   } = config;
 
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [selectedCity, setSelectedCity] = useState<string | undefined>(city);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(serviceType);
+
+  // Sincronizar props com estado quando as rotas mudam
+  useEffect(() => { setSelectedCity(city); }, [city]);
+  useEffect(() => { setSelectedCategory(serviceType); }, [serviceType]);
 
   // Personalização de SEO para Landing Pages Regionais
-  const displayHeadline = city 
-    ? `Serviços de limpeza e faxina profissional em ${city}`
+  const displayHeadline = selectedCity
+    ? selectedCategory
+      ? `Serviços de ${selectedCategory} em ${selectedCity}`
+      : `Serviços profissionais em ${selectedCity}`
     : heroData.headline;
 
-  const displaySubheadline = city
-    ? `Atendimento rápido e garantido para sua casa ou empresa em ${city} e região.`
+  const displaySubheadline = selectedCity
+    ? selectedCategory
+      ? `Atendimento rápido e garantido de ${selectedCategory} em ${selectedCity} e região.`
+      : `Atendimento rápido e garantido em ${selectedCity} e região.`
     : heroData.subheadline;
 
   React.useEffect(() => {
-    if (city) {
-      document.title = `RM Limpeza Clean | Faxina Profissional em ${city} e Região`;
+    if (selectedCity) {
+      const title = selectedCategory
+        ? `RM Serviços | ${selectedCategory} em ${selectedCity} e Região`
+        : `RM Serviços | Serviços Profissionais em ${selectedCity} e Região`;
+      document.title = title;
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) {
-        metaDesc.setAttribute('content', `Procurando faxina ou limpeza em ${city}? A RM Limpeza Clean atende toda a região com equipe profissional, verificada e garantia de satisfação. Peça agora!`);
+        const content = selectedCategory
+          ? `Procurando ${selectedCategory} em ${selectedCity}? A RM Serviços atende toda a região com equipe profissional, verificada e garantia de satisfação.`
+          : `Procurando serviços profissionais em ${selectedCity}? A RM Serviços atende toda a região com equipe verificada e garantia de satisfação.`;
+        metaDesc.setAttribute('content', content);
       }
     }
-  }, [city]);
+  }, [selectedCity, selectedCategory]);
 
   if (isLoading) {
     return (
@@ -80,10 +93,10 @@ export default function HomePage({ city }: HomePageProps) {
       <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
         <div className="bg-white/80 backdrop-blur-xl border-b border-slate-100/50">
           <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-20 sm:h-24 flex items-center justify-between">
-            <div className="flex items-center group cursor-pointer">
+            <div className="flex items-center group cursor-pointer" onClick={() => { setSelectedCity(undefined); setSelectedCategory(undefined); }}>
               <Logo className="h-16 sm:h-20 py-2 sm:py-3 transition-transform group-hover:scale-105" />
             </div>
-            
+
             <div className="hidden lg:flex items-center gap-12">
               <a href="#confianca" className="text-slate-600 hover:text-blue-600 font-bold text-sm tracking-tight transition-colors">Confiança</a>
               <a href="#servicos" className="text-slate-600 hover:text-blue-600 font-bold text-sm tracking-tight transition-colors">Serviços</a>
@@ -91,8 +104,14 @@ export default function HomePage({ city }: HomePageProps) {
             </div>
 
             <div className="flex items-center gap-4">
-              <a 
-                href={WHATSAPP_LINK} 
+              {selectedCity && (
+                <div className="hidden sm:flex items-center gap-2 text-sm text-slate-600 bg-slate-100 px-4 py-2 rounded-full">
+                  <MapPin size={14} />
+                  <span className="font-bold">{selectedCity}</span>
+                </div>
+              )}
+              <a
+                href={WHATSAPP_LINK}
                 className="bg-slate-900 hover:bg-slate-800 text-white px-5 sm:px-7 py-3 sm:py-4 rounded-2xl font-bold text-xs sm:text-sm flex items-center gap-2.5 shadow-xl transition-all hover:shadow-slate-200 active:scale-95"
               >
                 <div className="bg-emerald-500 p-1 rounded-full animate-pulse">
@@ -224,8 +243,8 @@ export default function HomePage({ city }: HomePageProps) {
               {trustProcess?.map((item, i) => {
                 const Icon = item.icon as any;
                 return (
-                  <motion.div 
-                    key={i}
+                  <motion.div
+                    key={`trust-${i}`}
                     whileHover={{ y: -8 }}
                     className="p-10 rounded-[48px] bg-slate-50 border border-slate-100 hover:bg-white hover:shadow-3xl hover:border-blue-100 transition-all group"
                   >
@@ -246,44 +265,118 @@ export default function HomePage({ city }: HomePageProps) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
               {benefits?.map((benefit, i) => (
-                <BenefitCard key={i} {...benefit} />
+                <BenefitCard key={`benefit-${i}`} {...benefit} />
               ))}
             </div>
           </div>
         </section>
 
-        {/* SERVICOS CATEGORIZADOS */}
-        <section id="servicos" className="py-24 sm:py-32 bg-slate-900 rounded-[64px] sm:rounded-[100px] mx-4 my-12 text-white overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 blur-[120px] pointer-events-none" />
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 sm:mb-24 gap-8">
-              <div className="max-w-2xl">
-                <div className="font-black text-blue-500 uppercase tracking-widest text-xs sm:text-sm mb-4">Portfólio de Excelência</div>
-                <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight">O cuidado ideal para <span className="text-blue-500 italic">cada necessidade.</span></h2>
-              </div>
-              <a href={WHATSAPP_LINK} className="text-white hover:text-blue-400 font-bold border-b-2 border-blue-600 pb-2 flex items-center gap-2 group tracking-tight text-lg">
-                Orçamento personalizado <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </a>
-            </div>
+        {/* SELETOR DE CIDADE - NOVO */}
+        {!selectedCity && (
+          <section className="py-24 sm:py-32 bg-gradient-to-b from-white to-slate-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mb-16 sm:mb-20"
+              >
+                <div className="font-black text-blue-600 uppercase tracking-widest text-xs sm:text-sm mb-4">Atendimento Regional</div>
+                <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight mb-6">Selecione sua <span className="text-blue-600">cidade</span></h2>
+                <p className="text-xl text-slate-500 max-w-2xl mx-auto">Escolha sua cidade para ver os serviços disponíveis com atendimento garantido</p>
+              </motion.div>
 
-            {/* Categorias */}
-            {['Residencial', 'Empresarial', 'Extras'].map((cat) => (
-              <div key={cat} className="mb-20 last:mb-0">
-                <div className="flex items-center gap-4 mb-10">
-                  <div className="h-px flex-1 bg-slate-800" />
-                  <span className="text-slate-500 font-black uppercase text-xs tracking-widest px-6">{cat}</span>
-                  <div className="h-px flex-1 bg-slate-800" />
-                </div>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
-                  {services?.filter(s => s.category === cat).map((service, i) => (
-                    <ServiceItem key={i} {...service} />
-                  ))}
-                </div>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                {cities.map((cityItem, i) => (
+                  <motion.button
+                    key={cityItem.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setSelectedCity(cityItem.name)}
+                    className="bg-white p-8 sm:p-10 rounded-[32px] shadow-lg hover:shadow-2xl border border-slate-100 hover:border-blue-200 transition-all group text-left"
+                  >
+                    <div className="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                      <MapPin size={28} />
+                    </div>
+                    <h3 className="text-2xl font-black text-slate-900 mb-2">{cityItem.name}</h3>
+                    <p className="text-slate-500 text-sm">Ver serviços disponíveis</p>
+<div className="flex items-center gap-2 mt-4 text-blue-600 font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                       Selecionar <ChevronRight size={16} />
+                     </div>
+                  </motion.button>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
+          </section>
+        )}
+
+        {/* SERVICOS CATEGORIZADOS - ATUALIZADO */}
+        {selectedCity && (
+          <section id="servicos" className="py-24 sm:py-32 bg-slate-900 rounded-[64px] sm:rounded-[100px] mx-4 my-12 text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 blur-[120px] pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 sm:mb-24 gap-8">
+                <div className="max-w-2xl">
+                  <div className="font-black text-blue-500 uppercase tracking-widest text-xs sm:text-sm mb-4">Serviços em {selectedCity}</div>
+                  <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight">O cuidado ideal para <span className="text-blue-500 italic">cada necessidade.</span></h2>
+                </div>
+                <button
+                  onClick={() => { setSelectedCity(undefined); setSelectedCategory(undefined); }}
+                  className="text-white hover:text-blue-400 font-bold border-b-2 border-blue-600 pb-2 flex items-center gap-2 group tracking-tight text-lg"
+                >
+                  Alterar cidade <MapPin size={20} />
+                </button>
+              </div>
+
+              {/* Filtro de Categorias */}
+              <div className="flex flex-wrap justify-center gap-4 mb-16">
+                {serviceCategories.map((cat) => (
+                  <motion.button
+                    key={cat}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedCategory(selectedCategory === cat ? undefined : cat)}
+                    className={`px-6 py-3 rounded-full font-bold text-sm transition-all ${
+                      selectedCategory === cat
+                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25'
+                        : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    }`}
+                  >
+                    {cat}
+                  </motion.button>
+                ))}
+              </div>
+
+              {/* Categorias de Serviços */}
+              {(selectedCategory ? [selectedCategory] : serviceCategories).map((cat) => (
+                <div key={cat} className="mb-20 last:mb-0">
+                  <div className="flex items-center gap-4 mb-10">
+                    <div className="h-px flex-1 bg-slate-800" />
+                    <span className="text-slate-500 font-black uppercase text-xs tracking-widest px-6">{cat}</span>
+                    <div className="h-px flex-1 bg-slate-800" />
+                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
+                    {services?.filter(s => s.category === cat).map((service) => (
+                      <ServiceItem key={service.id} {...service} />
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div className="text-center mt-12">
+                <a href={WHATSAPP_LINK} className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-[24px] font-bold text-lg inline-flex items-center gap-3 transition-all shadow-xl hover:shadow-2xl">
+                  <MessageCircle size={24} />
+                  Solicitar Orçamento em {selectedCity}
+                </a>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* DEPOIMENTOS - SOCIAL PROOF PREMIUM */}
         <section id="depoimentos" className="py-24 sm:py-32 bg-white">
@@ -298,7 +391,7 @@ export default function HomePage({ city }: HomePageProps) {
             
             <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
               {testimonials?.map((testimonial, i) => (
-                <TestimonialCard key={i} {...testimonial} />
+                <TestimonialCard key={`testimonial-${i}`} {...testimonial} />
               ))}
             </div>
           </div>

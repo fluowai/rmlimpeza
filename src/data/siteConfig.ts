@@ -1,23 +1,4 @@
-import { 
-  Home, 
-  Building2, 
-  Building, 
-  Sparkles, 
-  Clock, 
-  ShieldCheck, 
-  BadgeDollarSign,
-  Zap,
-  Target,
-  RotateCcw,
-  CheckCircle2,
-  Users,
-  Search,
-  Shield,
-  ThumbsUp,
-  Briefcase,
-  Layers,
-  Heart
-} from 'lucide-react';
+import { Search, Shield, ThumbsUp } from 'lucide-react';
 
 export const WHATSAPP_NUMBER = "5548988076531";
 export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
@@ -77,47 +58,114 @@ export const benefits = [
 ];
 
 export const services = [
-  { 
+  // Limpeza
+  {
     id: 'residencial',
-    icon: 'Home', 
+    icon: 'Home',
     title: "Limpeza Residencial",
     description: "Diarista qualificada para manter sua casa sempre impecável e organizada.",
-    category: "Residencial"
+    category: "Limpeza"
   },
-  { 
+  {
     id: 'pesada',
-    icon: 'Target', 
+    icon: 'Target',
     title: "Faxina Pesada",
     description: "Higienização profunda em todos os cantos, ideal para limpezas trimestrais.",
-    category: "Residencial"
+    category: "Limpeza"
   },
-  { 
+  {
     id: 'pos-obra',
-    icon: 'Zap', 
+    icon: 'Zap',
     title: "Pós-Obra",
     description: "Limpeza técnica para remover resíduos finos de construção e entregar pronto pra morar.",
-    category: "Residencial"
+    category: "Limpeza"
   },
-  { 
+  {
     id: 'comercial',
-    icon: 'Building2', 
+    icon: 'Building2',
     title: "Escritórios & Clínicas",
     description: "Ambiente higienizado para garantir saúde e produtividade para sua equipe.",
-    category: "Empresarial"
+    category: "Limpeza"
   },
-  { 
+  {
     id: 'condominio',
-    icon: 'Building', 
+    icon: 'Building',
     title: "Condomínios",
     description: "Manutenção de áreas comuns com rigor profissional e frequência personalizada.",
-    category: "Empresarial"
+    category: "Limpeza"
   },
-  { 
+  {
     id: 'estofados',
-    icon: 'Layers', 
+    icon: 'Layers',
     title: "Extras & Estofados",
     description: "Higienização de sofás, tapetes e organização estratégica de ambientes.",
-    category: "Extras"
+    category: "Limpeza"
+  },
+  // Copeira
+  {
+    id: 'copeira-eventos',
+    icon: 'Coffee',
+    title: "Copeira para Eventos",
+    description: "Serviço profissional de copeira para casamentos, festas e eventos corporativos.",
+    category: "Copeira"
+  },
+  {
+    id: 'copeira-escritorios',
+    icon: 'Building2',
+    title: "Copeira para Escritórios",
+    description: "Organização de cozinhas, preparação de café e suporte para equipes corporativas.",
+    category: "Copeira"
+  },
+  {
+    id: 'copeira-condominios',
+    icon: 'Building',
+    title: "Copeira em Condomínios",
+    description: "Gestão de copa, organização de áreas de lazer e suporte aos moradores.",
+    category: "Copeira"
+  },
+  // Portaria
+  {
+    id: 'portaria-24h',
+    icon: 'Bell',
+    title: "Portaria 24 Horas",
+    description: "Controle de acesso, monitoramento e segurança patrimonial contínua.",
+    category: "Portaria"
+  },
+  {
+    id: 'portaria-condominios',
+    icon: 'Warehouse',
+    title: "Portaria para Condomínios",
+    description: "Atendimento a moradores, recebimento de encomendas e controle de visitantes.",
+    category: "Portaria"
+  },
+  {
+    id: 'portaria-eventos',
+    icon: 'UserCheck',
+    title: "Portaria para Eventos",
+    description: "Controle de acesso, credenciamento e organização de entrada em eventos.",
+    category: "Portaria"
+  },
+  // Garçom
+  {
+    id: 'garcao-eventos',
+    icon: 'Utensils',
+    title: "Garçom para Eventos",
+    description: "Atendimento profissional em casamentos, formaturas e eventos sociais.",
+    category: "Garçom"
+  },
+  {
+    id: 'garcao-corporativo',
+    icon: 'Briefcase',
+    title: "Garçom Corporativo",
+    description: "Serviço de buffet e atendimento para coffee breaks e eventos empresariais.",
+    category: "Garçom"
+  },
+  {
+    id: 'garcao-bares',
+    icon: 'Coffee',
+    title: "Garçom para Bares & Restaurantes",
+    description: "Atendimento ágil, serviço de mesa e suporte operacional para restaurantes.",
+    category: "Garçom"
   }
 ];
 
